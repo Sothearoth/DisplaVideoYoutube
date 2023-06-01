@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'color.dart';
 import 'main_app.dart';
 
 class LoginScreen extends StatefulWidget {
+
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
@@ -46,6 +49,24 @@ class _LoginScreenState extends State<LoginScreen> {
     // }
   }
 
+
+
+  @override
+  void initState() {
+    super.initState();
+    checkLang();
+  }
+
+  Future<void> checkLang() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? action = prefs.getString('lang');
+    if(action == 'kh'){
+      Get.updateLocale(Locale('kh', 'KH'));
+    }else{
+      Get.updateLocale(Locale('en', 'US'));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             // header login
             Text(
-              "Login",
+              "Login".tr,
               style: TextStyle(
                   color: DefaultColor.primaryColor,
                   fontSize: 24,
@@ -73,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Icons.person,
                     color: DefaultColor.secondaryColor,
                   ),
-                  hintText: "Username",
+                  hintText: "Username".tr,
                   hintStyle: TextStyle(color: DefaultColor.secondaryColor),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(

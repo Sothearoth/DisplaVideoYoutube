@@ -12,10 +12,12 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+
   List<Map<String, dynamic>> settingList = [
     {"title": "Change Languguage", "icon": Icons.language},
     {"title": "About Us", "icon": Icons.info},
   ];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -31,7 +33,8 @@ class _SettingScreenState extends State<SettingScreen> {
                 return CupertinoButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    print(index);
+                    PopupSetting().showSettingAlertDialog(context, "Change Language");
+
                   },
                   child: Container(
                     margin: EdgeInsets.only(top: 10),

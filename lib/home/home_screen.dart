@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        margin: EdgeInsets.only(left: 20, right: 20),
+        margin: const EdgeInsets.only(left: 20, right: 20),
         child: CustomScrollView(
           slivers: [
             // App Bar
@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   children: dummyData.listMapImg
                       .map((e) => Container(
-                            margin: EdgeInsets.only(right: 20),
+                            margin: const EdgeInsets.only(right: 20),
                             width: 120,
                             height: 190,
                             decoration: BoxDecoration(
@@ -48,9 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   e.img,
                                   height: 160,
                                 ),
-                                Container(
-                                  child: Text(e.title),
-                                )
+                                Text(e.title)
                               ],
                             ),
                           ))
@@ -62,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // title pupular
             SliverToBoxAdapter(
               child: Container(
-                margin: EdgeInsets.only(top: 20),
+                margin: const EdgeInsets.only(top: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -91,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     print(index);
                   },
                   child: Container(
-                    margin: EdgeInsets.only(top: 20),
+                    margin: const EdgeInsets.only(top: 20),
                     height: 100,
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -106,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Row(
                           children: [
                             Container(
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               width: 100,
                               child: Image.network(
                                   dummyData.listMapImg[index].img),
@@ -144,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             });
                           },
                           child: Container(
-                            margin: EdgeInsets.only(right: 10, top: 10),
+                            margin: const EdgeInsets.only(right: 10, top: 10),
                             child: arrayFav.contains(index)
                                 ? Icon(
                                     Icons.favorite,

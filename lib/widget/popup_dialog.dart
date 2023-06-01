@@ -1,13 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/style.dart';
+import 'package:flutter_application_1/login.dart';
+import 'package:flutter_application_1/main.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PopupSetting {
+
   Future showSettingAlertDialog(
     BuildContext context,
     String title,
   ) {
-    return showDialog<String>(
+    return showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) => Stack(
@@ -69,6 +74,7 @@ class SettingModul extends StatefulWidget {
 }
 
 class _SettingModolState extends State<SettingModul> {
+
   List<Map<String, dynamic>> languageList = [
     {
       "name": "English",
@@ -79,15 +85,17 @@ class _SettingModolState extends State<SettingModul> {
       "flag": "assets/images/cambodia_flag.png",
     },
   ];
+
   int currentLanguage = 0;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: contentsLangauges(context),
+      child: contentsLanguage(context),
     );
   }
 
-  Widget contentsLangauges(BuildContext context) {
+  Widget contentsLanguage(BuildContext context) {
     return Container(
       width: 400,
       child: GridView.builder(
@@ -102,10 +110,20 @@ class _SettingModolState extends State<SettingModul> {
         itemBuilder: (context, index) {
           return CupertinoButton(
             padding: EdgeInsets.zero,
-            onPressed: () {
-              setState(() {
+            onPressed: () async {
+              // Obtain shared preferences.
+              final SharedPreferences prefs = await SharedPreferences.getInstance();
+
                 currentLanguage = index;
-              });
+                if(index == 0){
+                  Get.updateLocale(Locale('en','US'));
+                  await prefs.setString('lang', 'us');
+                }else{
+                  Get.updateLocale(Locale('kh','KH'));
+                  await prefs.setString('lang', 'kh');
+                }
+                navigator?.pop(context);
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> LoginScreen()));
             },
             child: Container(
               decoration: BoxDecoration(

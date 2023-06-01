@@ -3,6 +3,7 @@ import 'package:flutter_application_1/favorite.dart';
 import 'package:flutter_application_1/home/home_screen.dart';
 import 'package:flutter_application_1/popular.dart';
 import 'package:flutter_application_1/setting.dart';
+import 'package:get/get.dart';
 
 import 'color.dart';
 
@@ -14,12 +15,14 @@ class MainAppScreen extends StatefulWidget {
 }
 
 class _MainAppScreenState extends State<MainAppScreen> {
+
   List<Map<String, dynamic>> listBottom = [
-    {"name": "Home", "icon": Icons.home},
-    {"name": "Favorite", "icon": Icons.favorite},
-    {"name": "Popular", "icon": Icons.soap},
-    {"name": "Setting", "icon": Icons.settings}
+    {"name": 'Home'.tr, "icon": Icons.home},
+    {"name": "Favorite".tr, "icon": Icons.favorite},
+    {"name": "Popular".tr, "icon": Icons.soap},
+    {"name": "Setting".tr, "icon": Icons.settings}
   ];
+
   String _page = "Home";
   int currentIndex = 0;
 
@@ -86,4 +89,5 @@ class _MainAppScreenState extends State<MainAppScreen> {
       ),
     );
   }
+
 }
