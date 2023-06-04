@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utils/app_preference.dart';
+import 'package:flutter_application_1/utils/navigate_custom.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,11 +43,12 @@ class _LoginScreenState extends State<LoginScreen> {
     //     messageError = "Invalid password";
     //   });
     // } else {
-    Navigator.of(context).pushReplacement(
+/*    Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => MainAppScreen(),
       ),
-    );
+    );*/
+  navigateTo(context, destination: const MainAppScreen());
     // }
   }
 
@@ -57,10 +60,10 @@ class _LoginScreenState extends State<LoginScreen> {
     checkLang();
   }
 
-  Future<void> checkLang() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? action = prefs.getString('lang');
-    if(action == 'kh'){
+  void checkLang()  {
+   /* final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? action = prefs.getString('lang');*/
+    if(AppPreference.getLanguage() == 'kh'){
       Get.updateLocale(Locale('kh', 'KH'));
     }else{
       Get.updateLocale(Locale('en', 'US'));

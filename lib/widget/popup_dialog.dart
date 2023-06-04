@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/style.dart';
 import 'package:flutter_application_1/login.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/utils/app_preference.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -89,6 +90,25 @@ class _SettingModolState extends State<SettingModul> {
   int currentLanguage = 0;
 
   @override
+  void initState() {
+    super.initState();
+
+    updateLangStatus();
+
+  }
+
+  Future<void> updateLangStatus() async {
+
+    if(AppPreference.getLanguage() == 'us'){
+      currentLanguage = 0;
+    }else{
+      currentLanguage = 1;
+    }
+    setState(() {});
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: contentsLanguage(context),
@@ -112,15 +132,14 @@ class _SettingModolState extends State<SettingModul> {
             padding: EdgeInsets.zero,
             onPressed: () async {
               // Obtain shared preferences.
-              final SharedPreferences prefs = await SharedPreferences.getInstance();
 
                 currentLanguage = index;
                 if(index == 0){
                   Get.updateLocale(Locale('en','US'));
-                  await prefs.setString('lang', 'us');
+                  AppPreference.saveLanguage('us');
                 }else{
                   Get.updateLocale(Locale('kh','KH'));
-                  await prefs.setString('lang', 'kh');
+                  AppPreference.saveLanguage('kh');
                 }
                 navigator?.pop(context);
                 Navigator.of(context).push(MaterialPageRoute(builder: (context)=> LoginScreen()));

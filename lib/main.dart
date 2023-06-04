@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login.dart';
+import 'utils/app_preference.dart';
 import 'utils/locale.dart';
 
 
-void main() {
+Future<void> main() async {
+  //  Ensure Widget Initialized
+  WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const MyApp()
+  // init preference
+  await AppPreference.init();
 
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -22,12 +25,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-  @override
-  void initState() {
-    super.initState();
-    // Obtain shared preferences.
-  }
 
   @override
   Widget build(BuildContext context) {
