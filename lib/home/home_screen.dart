@@ -6,6 +6,7 @@ import '../dummy/dummy_data.dart';
 import '../model/model.dart';
 import '../widget/sliver_appbar.dart';
 
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -16,6 +17,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List arrayFav = [];
   DummyData dummyData = DummyData();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -165,4 +172,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+
+
+
+
 }

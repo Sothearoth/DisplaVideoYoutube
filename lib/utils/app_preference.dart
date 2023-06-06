@@ -6,6 +6,7 @@ class AppPreference{
 
   // Key
   static const LangKey = 'lang';
+  static const LoginKey = 'lang';
 
   static Future init() async => sharedPreferences = await SharedPreferences.getInstance();
 
@@ -14,14 +15,26 @@ class AppPreference{
     await sharedPreferences.setString(LangKey, lang);
   }
 
+  static Future saveLogin(bool login) async {
+    await sharedPreferences.setBool(LoginKey, login);
+  }
+
   // Get data
   static String? getLanguage() {
     return sharedPreferences.getString(LangKey);
   }
 
+  static bool? getLogin() {
+    return sharedPreferences.getBool(LoginKey);
+  }
+
   // Clear data
   static void clearLanguage(){
     sharedPreferences.remove(LangKey);
+  }
+
+  static void clearLogin(){
+    sharedPreferences.remove(LoginKey);
   }
 
 

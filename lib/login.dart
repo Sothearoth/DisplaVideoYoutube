@@ -1,9 +1,15 @@
+
+import 'dart:convert';
+import 'dart:io';
+
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/app_preference.dart';
 import 'package:flutter_application_1/utils/navigate_custom.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 import 'color.dart';
 import 'main_app.dart';
@@ -22,37 +28,48 @@ class _LoginScreenState extends State<LoginScreen> {
   String invalidUser = "";
   String messageError = "";
   bool isInvalidUsername = false;
-  String username = "user@gmail.com";
-  String password = "user123";
+  String username = "U";
+  String password = "";
   bool isHidden = true;
 
-  login() {
-    // if (usernameController.text == '' && passwordController.text == '') {
-    //   setState(() {
-    //     messageError = "Please enter your username and password.";
-    //   });
-    // } else if (usernameController.text == '' ||
-    //     usernameController.text != username) {
-    //   setState(() {
-    //     invalidUser = "Invalid username";
-    //     isInvalidUsername = true;
-    //   });
-    // } else if (passwordController.text == '' ||
-    //     passwordController.text != password) {
-    //   setState(() {
-    //     messageError = "Invalid password";
-    //   });
-    // } else {
-/*    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => MainAppScreen(),
-      ),
-    );*/
-  navigateTo(context, destination: const MainAppScreen());
-    // }
+  login() async {
+    if (usernameController.text == '' && passwordController.text == '') {
+      setState(() {
+        messageError = "Please enter your username and password.";
+      });
+    } else if (usernameController.text == '') {
+      setState(() {
+        invalidUser = "Invalid username";
+        isInvalidUsername = true;
+      });
+    } else if (passwordController.text == '') {
+      setState(() {
+        messageError = "Invalid password";
+      });
+    } else {
+
+      String deviceId = '';
+      String deviceName = '';
+      final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+      if(Platform.isAndroid){
+        AndroidDeviceInfo androidDeviceInfo = await deviceInfoPlugin.androidInfo;
+        deviceId = androidDeviceInfo.id;
+        deviceName = androidDeviceInfo.model;
+      }else{
+        IosDeviceInfo iosDeviceInfo = await deviceInfoPlugin.iosInfo;
+        deviceId = iosDeviceInfo.utsname.machine;
+        deviceName = iosDeviceInfo.utsname.sysname;
+      }
+
+      LoginResponse response = await loginRequest(deviceId, deviceName, passwordController.text , usernameController.text);
+      if(response.header?.statusCode == 200 && response.header?.result == true){
+        AppPreference.saveLogin(true);
+        navigateTo(context, destination: const MainAppScreen());
+      }else{
+        print('Login fail');
+      }
+     }
   }
-
-
 
   @override
   void initState() {
@@ -61,12 +78,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void checkLang()  {
-   /* final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? action = prefs.getString('lang');*/
     if(AppPreference.getLanguage() == 'kh'){
-      Get.updateLocale(Locale('kh', 'KH'));
+      Get.updateLocale(const Locale('kh', 'KH'));
     }else{
-      Get.updateLocale(Locale('en', 'US'));
+      Get.updateLocale(const Locale('en', 'US'));
     }
   }
 
@@ -100,13 +115,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   hintText: "Username".tr,
                   hintStyle: TextStyle(color: DefaultColor.secondaryColor),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
+                    borderRadius: const BorderRadius.all(
                       Radius.circular(10),
                     ),
                     borderSide: BorderSide(color: DefaultColor.primaryColor),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
+                    borderRadius: const BorderRadius.all(
                       Radius.circular(10),
                     ),
                     borderSide: BorderSide(color: DefaultColor.primaryColor),
@@ -118,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
               visible: isInvalidUsername,
               child: Text(
                 invalidUser,
-                style: TextStyle(color: Colors.red),
+                style: const TextStyle(color: Colors.red),
               ),
             ),
 
@@ -152,13 +167,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   hintText: "Password",
                   hintStyle: TextStyle(color: DefaultColor.secondaryColor),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
+                    borderRadius: const BorderRadius.all(
                       Radius.circular(10),
                     ),
                     borderSide: BorderSide(color: DefaultColor.primaryColor),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
+                    borderRadius: const BorderRadius.all(
                       Radius.circular(10),
                     ),
                     borderSide: BorderSide(color: DefaultColor.primaryColor),
@@ -166,9 +181,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            Text(
-              messageError,
-              style: TextStyle(color: Colors.red),
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              child: Text(
+                messageError,
+                style: const TextStyle(color: Colors.red),
+              ),
             ),
 
             // button forget pw
@@ -197,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 alignment: Alignment.center,
                 height: 45,
                 width: double.infinity,
-                child: Text(
+                child: const Text(
                   "Login",
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
@@ -220,5 +238,110 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+
+  loginRequest(String deviceId, String deviceName, String password, String username) async {
+
+    var request = http.MultipartRequest('POST', Uri.parse('https://qacltom.udaya-tech.com/MacleLogistic/auth/login'));
+
+    request.fields['deviceId'] = deviceId;
+    request.fields['deviceName'] = deviceName;
+    request.fields['password'] = password;
+    request.fields['username'] = username;
+
+    final response = await http.Response.fromStream( await request.send());
+
+    if(response.statusCode == 200){
+      print(response.body);
+      return LoginResponse.fromJson(jsonDecode(response.body));
+    }else{
+      throw Exception('Fail to load to server');
+    }
+  }
+
+
+
+}
+
+
+
+
+class LoginResponse {
+  Header? header;
+  Body? body;
+
+  LoginResponse({this.header, this.body});
+
+  LoginResponse.fromJson(Map<String, dynamic> json) {
+    header =
+    json['header'] != null ? new Header.fromJson(json['header']) : null;
+    body = json['body'] != null ? new Body.fromJson(json['body']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.header != null) {
+      data['header'] = this.header!.toJson();
+    }
+    if (this.body != null) {
+      data['body'] = this.body!.toJson();
+    }
+    return data;
+  }
+}
+
+class Header {
+  int? serverTimestamp;
+  bool? result;
+  int? statusCode;
+
+  Header({this.serverTimestamp, this.result, this.statusCode});
+
+  Header.fromJson(Map<String, dynamic> json) {
+    serverTimestamp = json['serverTimestamp'];
+    result = json['result'];
+    statusCode = json['statusCode'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['serverTimestamp'] = this.serverTimestamp;
+    data['result'] = this.result;
+    data['statusCode'] = this.statusCode;
+    return data;
+  }
+}
+
+class Body {
+  String? accessToken;
+  String? tokenType;
+  String? refreshToken;
+  int? expiresIn;
+  String? scope;
+
+  Body(
+      {this.accessToken,
+        this.tokenType,
+        this.refreshToken,
+        this.expiresIn,
+        this.scope});
+
+  Body.fromJson(Map<String, dynamic> json) {
+    accessToken = json['accessToken'];
+    tokenType = json['tokenType'];
+    refreshToken = json['refreshToken'];
+    expiresIn = json['expiresIn'];
+    scope = json['scope'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['accessToken'] = this.accessToken;
+    data['tokenType'] = this.tokenType;
+    data['refreshToken'] = this.refreshToken;
+    data['expiresIn'] = this.expiresIn;
+    data['scope'] = this.scope;
+    return data;
   }
 }
