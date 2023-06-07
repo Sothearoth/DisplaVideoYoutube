@@ -7,12 +7,15 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/app_preference.dart';
+import 'package:flutter_application_1/utils/global_function.dart';
+import 'package:flutter_application_1/utils/loading_custom.dart';
 import 'package:flutter_application_1/utils/navigate_custom.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import 'color.dart';
 import 'main_app.dart';
+import 'model/login/login_response.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -48,28 +51,20 @@ class _LoginScreenState extends State<LoginScreen> {
       });
     } else {
 
-      String deviceId = '';
-      String deviceName = '';
-      final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-      if(Platform.isAndroid){
-        AndroidDeviceInfo androidDeviceInfo = await deviceInfoPlugin.androidInfo;
-        deviceId = androidDeviceInfo.id;
-        deviceName = androidDeviceInfo.model;
-      }else{
-        IosDeviceInfo iosDeviceInfo = await deviceInfoPlugin.iosInfo;
-        deviceId = iosDeviceInfo.utsname.machine;
-        deviceName = iosDeviceInfo.utsname.sysname;
-      }
-
-      LoginResponse response = await loginRequest(deviceId, deviceName, passwordController.text , usernameController.text);
+      LoadingCustom().loadingShow(context);
+      LoginResponse response = await loginRequest( await getDeviceId(), await getDeviceName(), passwordController.text , usernameController.text);
       if(response.header?.statusCode == 200 && response.header?.result == true){
         AppPreference.saveLogin(true);
+        LoadingCustom().loadingDismiss(context);
         navigateTo(context, destination: const MainAppScreen());
       }else{
-        print('Login fail');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login Fail!')));
+        LoadingCustom().loadingDismiss(context);
       }
      }
   }
+
+
 
   @override
   void initState() {
@@ -264,84 +259,3 @@ class _LoginScreenState extends State<LoginScreen> {
 
 }
 
-
-
-
-class LoginResponse {
-  Header? header;
-  Body? body;
-
-  LoginResponse({this.header, this.body});
-
-  LoginResponse.fromJson(Map<String, dynamic> json) {
-    header =
-    json['header'] != null ? new Header.fromJson(json['header']) : null;
-    body = json['body'] != null ? new Body.fromJson(json['body']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.header != null) {
-      data['header'] = this.header!.toJson();
-    }
-    if (this.body != null) {
-      data['body'] = this.body!.toJson();
-    }
-    return data;
-  }
-}
-
-class Header {
-  int? serverTimestamp;
-  bool? result;
-  int? statusCode;
-
-  Header({this.serverTimestamp, this.result, this.statusCode});
-
-  Header.fromJson(Map<String, dynamic> json) {
-    serverTimestamp = json['serverTimestamp'];
-    result = json['result'];
-    statusCode = json['statusCode'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['serverTimestamp'] = this.serverTimestamp;
-    data['result'] = this.result;
-    data['statusCode'] = this.statusCode;
-    return data;
-  }
-}
-
-class Body {
-  String? accessToken;
-  String? tokenType;
-  String? refreshToken;
-  int? expiresIn;
-  String? scope;
-
-  Body(
-      {this.accessToken,
-        this.tokenType,
-        this.refreshToken,
-        this.expiresIn,
-        this.scope});
-
-  Body.fromJson(Map<String, dynamic> json) {
-    accessToken = json['accessToken'];
-    tokenType = json['tokenType'];
-    refreshToken = json['refreshToken'];
-    expiresIn = json['expiresIn'];
-    scope = json['scope'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['accessToken'] = this.accessToken;
-    data['tokenType'] = this.tokenType;
-    data['refreshToken'] = this.refreshToken;
-    data['expiresIn'] = this.expiresIn;
-    data['scope'] = this.scope;
-    return data;
-  }
-}

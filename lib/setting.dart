@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/style.dart';
+import 'package:flutter_application_1/login.dart';
+import 'package:flutter_application_1/utils/app_preference.dart';
+import 'package:flutter_application_1/utils/navigate_custom.dart';
 import 'package:flutter_application_1/widget/popup_dialog.dart';
 import 'package:flutter_application_1/widget/sliver_appbar.dart';
 
@@ -16,6 +19,7 @@ class _SettingScreenState extends State<SettingScreen> {
   List<Map<String, dynamic>> settingList = [
     {"title": "Change Languguage", "icon": Icons.language},
     {"title": "About Us", "icon": Icons.info},
+    {"title": "Logout", "icon": Icons.logout},
   ];
 
   @override
@@ -33,7 +37,14 @@ class _SettingScreenState extends State<SettingScreen> {
                 return CupertinoButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    PopupSetting().showSettingAlertDialog(context, "Change Language");
+                    if(index == 0){
+                      PopupSetting().showSettingAlertDialog(context, "Change Language");
+                    }else if (index == 1){
+                      // about us click
+                    }else{
+                      AppPreference.clearLogin();
+                      navigateTo(context, destination: LoginScreen());
+                    }
 
                   },
                   child: Container(

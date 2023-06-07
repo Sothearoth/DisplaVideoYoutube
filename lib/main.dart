@@ -13,7 +13,7 @@ import 'utils/locale.dart';
 Future<void> main() async {
 
   // config HTTP
-  HttpOverrides.global =  MyHttpOverrides();
+/*  HttpOverrides.global =  MyHttpOverrides();*/
 
   //  Ensure Widget Initialized
   WidgetsFlutterBinding.ensureInitialized();

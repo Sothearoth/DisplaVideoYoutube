@@ -1,9 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../color.dart';
 import '../dummy/dummy_data.dart';
-import '../model/model.dart';
+import 'package:http/http.dart' as http;
 import '../widget/sliver_appbar.dart';
 
 
@@ -20,8 +22,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+  //  trackingFind(5);
+    getAll(5);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
   }
 
   @override
@@ -171,6 +181,17 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  void getAll(int count) async {
+
+    final response = await http.get(Uri.parse('http://192.168.100.11/get/songs/all'),);
+    if (response.statusCode == 200) {
+      log('Tracking Find Response : ${response.body}' );
+    //  return TrackingFindIDResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load to server!!');
+    }
   }
 
 
