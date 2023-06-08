@@ -1,4 +1,6 @@
 
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -50,7 +52,6 @@ class _LoginScreenState extends State<LoginScreen> {
         messageError = "Invalid password";
       });
     } else {
-
       LoadingCustom().loadingShow(context);
       LoginResponse response = await loginRequest( await getDeviceId(), await getDeviceName(), passwordController.text , usernameController.text);
       if(response.header?.statusCode == 200 && response.header?.result == true){
@@ -58,13 +59,11 @@ class _LoginScreenState extends State<LoginScreen> {
         LoadingCustom().loadingDismiss(context);
         navigateTo(context, destination: const MainAppScreen());
       }else{
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login Fail!')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Login Fail!')));
         LoadingCustom().loadingDismiss(context);
       }
      }
   }
-
-
 
   @override
   void initState() {
