@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../color.dart';
+import '../utils/color.dart';
 
 class CustomWidget {
   static sliverAppBar({required String title}) {

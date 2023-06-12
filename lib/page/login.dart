@@ -15,9 +15,9 @@ import 'package:flutter_application_1/utils/navigate_custom.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-import 'color.dart';
+import '../utils/color.dart';
 import 'main_app.dart';
-import 'model/login/login_response.dart';
+import '../model/login/login_response.dart';
 
 class LoginScreen extends StatefulWidget {
 

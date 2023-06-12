@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'color.dart';
-import 'dummy/dummy_data.dart';
-import 'model/model.dart';
-import 'widget/sliver_appbar.dart';
+import '../utils/color.dart';
+import '../dummy/dummy_data.dart';
+import '../model/model.dart';
+import '../widget/sliver_appbar.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen();

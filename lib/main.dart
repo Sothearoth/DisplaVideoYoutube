@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/main_app.dart';
+import 'package:flutter_application_1/page/main_app.dart';
 import 'package:get/get.dart';
 
 import 'config/http_config.dart';
-import 'login.dart';
+import 'page/login.dart';
 import 'utils/app_preference.dart';
 import 'utils/locale.dart';
 
@@ -13,7 +13,7 @@ import 'utils/locale.dart';
 Future<void> main() async {
 
   // config HTTP
-/*  HttpOverrides.global =  MyHttpOverrides();*/
+  HttpOverrides.global =  MyHttpOverrides();
 
   //  Ensure Widget Initialized
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +38,6 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return GetMaterialApp(
         translations: LocaleString(),
-        home: AppPreference.getLogin().isNull ? LoginScreen() : MainAppScreen());
+        home: AppPreference.getLogin().isNull ? const LoginScreen() : const MainAppScreen());
   }
 }

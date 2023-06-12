@@ -1,14 +1,14 @@
-import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model/home/get_all_song.dart';
 import 'package:flutter_application_1/model/home/get_favorite.dart';
+import 'package:flutter_application_1/page/item_detail.dart';
+import 'package:flutter_application_1/service/home_service.dart';
+import 'package:flutter_application_1/utils/navigate_custom.dart';
 
-import '../color.dart';
+import '../utils/color.dart';
 import '../dummy/dummy_data.dart';
-import 'package:http/http.dart' as http;
 import '../widget/sliver_appbar.dart';
 
 
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
     getAllSongData();
   //  getFavoriteData();
 
-    futureFavorite = getFavorite();
+    futureFavorite = HomeService().getFavorite();
 
   }
 
@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return CupertinoButton(
                                   padding: EdgeInsets.zero,
                                   onPressed: () {
-                                    print(index);
+                                    navigateTo(context, destination: ItemDetail(title: (dataResponse.data?[index].songName)!, id: (dataResponse.data?[index].id)!));
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.only(top: 20),
@@ -295,39 +295,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> getAllSongData() async {
-    var data = await getAllSong();
+    var data = await HomeService().getAllSong();
     setState(() {
       listAllSong.addAll(data);
     });
   }
 
-  Future<List<GetAllSong>> getAllSong() async {
-    final response = await http.get(Uri.parse('http://192.168.100.11/get/songs/all'));
-
-    if(response.statusCode == 200){
-      List jsonResponse = json.decode(response.body);
-      return jsonResponse.map((data) => GetAllSong.fromJson(data)).toList();
-    }else{
-      throw Exception('Fail to load to server');
-    }
-
-  }
-
   Future<void> getFavoriteData() async {
-    var data = await getFavorite();
+    var data = await HomeService().getFavorite();
     setState(() {
       listFavorite.addAll(data);
     });
   }
 
-  Future<List<GetFavorite>> getFavorite() async {
-    final response = await http.get(Uri.parse('http://192.168.100.11/get/popularSongs'));
-    if(response.statusCode == 200){
-      List jsonResponse = json.decode(response.body);
-      return jsonResponse.map((data) => GetFavorite.fromJson(data)).toList();
-    }else{
-      throw Exception('Fail to load to server');
-    }
-  }
 
 }

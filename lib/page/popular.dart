@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'color.dart';
-import 'dummy/dummy_data.dart';
-import 'widget/display_video.dart';
-import 'widget/sliver_appbar.dart';
+import '../utils/color.dart';
+import '../dummy/dummy_data.dart';
+import '../widget/sliver_appbar.dart';
 
 class PopularScreen extends StatefulWidget {
   const PopularScreen({Key? key}) : super(key: key);
@@ -19,7 +18,7 @@ class _PopularScreenState extends State<PopularScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Container(
-      margin: EdgeInsets.only(left: 20, right: 20),
+      margin: const EdgeInsets.only(left: 20, right: 20),
       child: CustomScrollView(
         slivers: [
           CustomWidget.sliverAppBar(title: "Popular song"),
@@ -29,14 +28,14 @@ class _PopularScreenState extends State<PopularScreen> {
             delegate: SliverChildBuilderDelegate((context, index) {
               return InkWell(
                 onTap: () {
-                  Navigator.push(
+       /*           Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => DisplayVideos(
                         title: dummyData.listMapImg[index].title,
                       ),
                     ),
-                  );
+                  );*/
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -53,7 +52,7 @@ class _PopularScreenState extends State<PopularScreen> {
                         height: 140,
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 10),
+                        margin: const EdgeInsets.only(top: 10),
                         child: Text(dummyData.listMapImg[index].title),
                       )
                     ],

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/favorite.dart';
-import 'package:flutter_application_1/home/home_screen.dart';
-import 'package:flutter_application_1/popular.dart';
-import 'package:flutter_application_1/setting.dart';
+import 'package:flutter_application_1/page/favorite.dart';
+import 'package:flutter_application_1/page/home_screen.dart';
+import 'package:flutter_application_1/page/popular.dart';
+import 'package:flutter_application_1/page/setting.dart';
 import 'package:get/get.dart';
 
-import 'color.dart';
+import '../utils/color.dart';
 
 class MainAppScreen extends StatefulWidget {
   const MainAppScreen({Key? key}) : super(key: key);

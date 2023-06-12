@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/style.dart';
-import 'package:flutter_application_1/login.dart';
+import 'package:flutter_application_1/page/login.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/utils/app_preference.dart';
 import 'package:get/get.dart';
